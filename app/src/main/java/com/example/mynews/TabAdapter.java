@@ -90,12 +90,14 @@ public class TabAdapter extends BaseAdapter {
             holder.author_name.setText(list.get(position).getAuthor_name());
 
             /**
-             * DiskCacheStrategy.NONE： 表示不缓存任何内容。
+             * DiskCacheStrategy.NONE： 表示不缓存任何内容到磁盘，默认开始内存缓存。
              */
             Glide.with(context)
                     .load(list.get(position).getThumbnail_pic_s())
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    // 图片加载出来前，显示的图片
                     .placeholder(R.mipmap.ic_launcher)
+                    // 图片加载失败后，显示的图片
                     .error(R.mipmap.ic_launcher)
                     .into(holder.image);
 

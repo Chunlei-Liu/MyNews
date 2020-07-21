@@ -3,12 +3,17 @@ package com.example.mynews.tools;
 import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
 import java.math.BigDecimal;
 
+
 // 本应用数据清除管理器
 public class DataCleanManager {
+
+    private static final String TAG = "MainActivity";
+
     /**
      * 清除本应用内部缓存(/data/data/com.xxx.xxx/cache)
      *
@@ -16,6 +21,7 @@ public class DataCleanManager {
      */
     public static void cleanInternalCache(Context context) {
 //        System.out.println("进来了:" + context.getCacheDir());
+        Log.i(TAG, ">>>cleanInternalCache: " + context.getCacheDir());
         deleteFilesByDirectory(context.getCacheDir());
     }
 
@@ -25,6 +31,7 @@ public class DataCleanManager {
      * @param context
      */
     public static void cleanDatabases(Context context) {
+        Log.i(TAG, ">>>cleanDatabases");
         deleteFilesByDirectory(new File("/data/data/"
                 + context.getPackageName() + "/databases"));
     }
@@ -35,6 +42,7 @@ public class DataCleanManager {
      * @param context
      */
     public static void cleanSharedPreference(Context context) {
+        Log.i(TAG, ">>>cleanSharedPreference");
         deleteFilesByDirectory(new File("/data/data/"
                 + context.getPackageName() + "/shared_prefs"));
     }
@@ -46,6 +54,7 @@ public class DataCleanManager {
      * @param dbName
      */
     public static void cleanDatabaseByName(Context context, String dbName) {
+        Log.i(TAG, ">>>cleanDatabaseByName");
         context.deleteDatabase(dbName);
     }
 
@@ -55,6 +64,7 @@ public class DataCleanManager {
      * @param context
      */
     public static void cleanFiles(Context context) {
+        Log.i(TAG, ">>>cleanFiles");
         deleteFilesByDirectory(context.getFilesDir());
     }
 
@@ -64,6 +74,7 @@ public class DataCleanManager {
      * @param context
      */
     public static void cleanExternalCache(Context context) {
+        Log.i(TAG, ">>>cleanExternalCache");
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             deleteFilesByDirectory(context.getExternalCacheDir());
@@ -76,6 +87,7 @@ public class DataCleanManager {
      * @param filePath
      */
     public static void cleanCustomCache(String filePath) {
+        Log.i(TAG, ">>>cleanCustomCache");
         deleteFilesByDirectory(new File(filePath));
     }
 
@@ -98,6 +110,7 @@ public class DataCleanManager {
             cleanCustomCache(filePath);
         }
     }
+
 
     /**
      * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理

@@ -29,7 +29,7 @@ public class FavoriteNewsListAdapter extends ArrayAdapter<NewsCollectBean> {
         } else {
             view = convertView;
         }
-        TextView newsName = (TextView) view.findViewById(R.id.title_news);
+        TextView newsName = view.findViewById(R.id.title_news);
         newsName.setText(dataBean.getNewsTitle());
         return view;
     }

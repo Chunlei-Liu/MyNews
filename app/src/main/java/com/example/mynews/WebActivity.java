@@ -54,8 +54,8 @@ public class WebActivity extends BaseActivity {
         pageUniquekey = getIntent().getStringExtra("uniquekey");
         pageTtile = getIntent().getStringExtra("news_title");
 
-        System.out.println("当前新闻id为：" + pageUniquekey);
-        System.out.println("当前新闻标题为：" + pageTtile);
+//        System.out.println("当前新闻id为：" + pageUniquekey);
+//        System.out.println("当前新闻标题为：" + pageTtile);
         Log.i("WebActivity", "Url>>>:" + urlData);
 
         // 通过WebView中的getSettings方法获得一个WebSettings对象
