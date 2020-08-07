@@ -2,7 +2,6 @@ package com.example.mynews.usermodel;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -46,8 +45,6 @@ import java.util.List;
 public class UserDetailActivity extends BaseActivity {
     private ImageView userAvatar;
 
-    private Toolbar detailToolbar;
-
     private String userId;
 
     public static final int CHOOSE_USER_AVATAR = 11;
@@ -65,7 +62,7 @@ public class UserDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_detail);
-        detailToolbar = findViewById(R.id.userData_toolbar);
+        Toolbar detailToolbar = findViewById(R.id.userData_toolbar);
         detailToolbar.setTitle("个人信息");
         setSupportActionBar(detailToolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -220,18 +217,15 @@ public class UserDetailActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // 保存更改的数据
-                userInfo.save();
-                Intent intent = new Intent();
-                intent.putExtra("nickName", showNickName.getText().toString());
-                intent.putExtra("signature", showSignature.getText().toString());
-                intent.putExtra("imagePath", userInfo.getImagePath());
-                setResult(RESULT_OK, intent);
-                System.out.println("当前个人信息活动页被销毁！！！");
-                UserDetailActivity.this.finish();
-                break;
+        if (item.getItemId() == android.R.id.home) {// 保存更改的数据
+            userInfo.save();
+            Intent intent = new Intent();
+            intent.putExtra("nickName", showNickName.getText().toString());
+            intent.putExtra("signature", showSignature.getText().toString());
+            intent.putExtra("imagePath", userInfo.getImagePath());
+            setResult(RESULT_OK, intent);
+            System.out.println("当前个人信息活动页被销毁！！！");
+            UserDetailActivity.this.finish();
         }
         return true;
     }
@@ -244,31 +238,26 @@ public class UserDetailActivity extends BaseActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    openAlbum();
-                } else {
-                    Toast.makeText(this, "you denied the permission", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            default:
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openAlbum();
+            } else {
+                Toast.makeText(this, "you denied the permission", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case CHOOSE_USER_AVATAR:
-                if (resultCode == RESULT_OK) {
-                    if (Build.VERSION.SDK_INT >= 19) {
-                        handleImageOnKiKat(data);
-                    } else {
-                        handleImageBeforeKiKat(data);
-                    }
+        if (requestCode == CHOOSE_USER_AVATAR) {
+            if (resultCode == RESULT_OK) {
+                if (Build.VERSION.SDK_INT >= 19) {
+                    handleImageOnKiKat(data);
+                } else {
+                    handleImageBeforeKiKat(data);
                 }
-                break;
+            }
         }
     }
 

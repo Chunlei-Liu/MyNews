@@ -20,7 +20,6 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText reg_userAccount;
     private EditText reg_userPwd;
     private EditText reg_confirm_userPwd;
-    private Button registerBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
         reg_userAccount = findViewById(R.id.register_userAccount);
         reg_userPwd = findViewById(R.id.register_pwd);
         reg_confirm_userPwd = findViewById(R.id.confirm_pwd);
-        registerBtn = findViewById(R.id.register_click);
+        Button registerBtn = findViewById(R.id.register_click);
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

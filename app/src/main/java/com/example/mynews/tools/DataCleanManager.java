@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 
 
 // 本应用数据清除管理器
+@SuppressWarnings("JavaDoc")
 public class DataCleanManager {
 
     private static final String TAG = "MainActivity";
@@ -120,7 +121,7 @@ public class DataCleanManager {
     private static void deleteFilesByDirectory(File file) {
 //        System.out.println("进来删除了？6666");
         if (file.isDirectory()) {
-            File zFiles[] = file.listFiles();
+            File[] zFiles = file.listFiles();
             for (File file2 : zFiles) {
                 deleteFilesByDirectory(file2);
             }
@@ -168,7 +169,7 @@ public class DataCleanManager {
             try {
                 File file = new File(filePath);
                 if (file.isDirectory()) {// 如果下面还有文件
-                    File files[] = file.listFiles();
+                    File[] files = file.listFiles();
                     for (int i = 0; i < files.length; i++) {
                         System.out.println("递归");
                         deleteFolderFile(files[i].getAbsolutePath(), true);

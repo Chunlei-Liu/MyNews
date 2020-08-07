@@ -23,10 +23,6 @@ public class TabAdapter extends BaseAdapter {
 
     private int IMAGE_02 = 1;
 
-    private int IMAGE_03 = 2;
-
-    private int VIEW_COUNT = 3;
-
     public TabAdapter(Context context, List<NewsBean.ResultBean.DataBean> list) {
         this.context = context;
         this.list = list;
@@ -48,8 +44,10 @@ public class TabAdapter extends BaseAdapter {
     }
 
     //得到不同item的总数
+    @SuppressWarnings("UnnecessaryLocalVariable")
     @Override
     public int getViewTypeCount() {
+        int VIEW_COUNT = 3;
         return VIEW_COUNT;
     }
 
@@ -59,7 +57,7 @@ public class TabAdapter extends BaseAdapter {
         if (list.get(position).getThumbnail_pic_s() != null &&
                 list.get(position).getThumbnail_pic_s02() != null &&
                 list.get(position).getThumbnail_pic_s03() != null) {
-            return IMAGE_03;
+            return 2;
         } else if (list.get(position).getThumbnail_pic_s() != null &&
                 list.get(position).getThumbnail_pic_s02() != null) {
             return IMAGE_02;
@@ -76,9 +74,9 @@ public class TabAdapter extends BaseAdapter {
                 convertView = View.inflate(context, R.layout.item_layout01, null);
                 holder = new Image01_ViewHolder();
                 //查找控件
-                holder.author_name = (TextView) convertView.findViewById(R.id.author_name);
-                holder.title = (TextView) convertView.findViewById(R.id.title);
-                holder.image = (ImageView) convertView.findViewById(R.id.image);
+                holder.author_name = convertView.findViewById(R.id.author_name);
+                holder.title = convertView.findViewById(R.id.title);
+                holder.image = convertView.findViewById(R.id.image);
 
                 convertView.setTag(holder);
             } else {
@@ -89,9 +87,6 @@ public class TabAdapter extends BaseAdapter {
             holder.title.setText(list.get(position).getTitle());
             holder.author_name.setText(list.get(position).getAuthor_name());
 
-            /**
-             * DiskCacheStrategy.NONE： 表示不缓存任何内容到磁盘，默认开始内存缓存。
-             */
             Glide.with(context)
                     .load(list.get(position).getThumbnail_pic_s())
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -108,9 +103,9 @@ public class TabAdapter extends BaseAdapter {
                 convertView = View.inflate(context, R.layout.item_layout02, null);
                 holder = new Image02_ViewHolder();
                 //查找控件
-                holder.image001 = (ImageView) convertView.findViewById(R.id.image001);
-                holder.image002 = (ImageView) convertView.findViewById(R.id.image002);
-                holder.title = (TextView) convertView.findViewById(R.id.title);
+                holder.image001 = convertView.findViewById(R.id.image001);
+                holder.image002 = convertView.findViewById(R.id.image002);
+                holder.title = convertView.findViewById(R.id.title);
                 //将ViewHolder对象存储在View中
                 convertView.setTag(holder);
 
@@ -139,10 +134,10 @@ public class TabAdapter extends BaseAdapter {
                 convertView = View.inflate(context, R.layout.item_layout03, null);
                 holder = new Image03_ViewHolder();
                 //查找控件
-                holder.image01 = (ImageView) convertView.findViewById(R.id.image01);
-                holder.image02 = (ImageView) convertView.findViewById(R.id.image02);
-                holder.image03 = (ImageView) convertView.findViewById(R.id.image03);
-                holder.title = (TextView) convertView.findViewById(R.id.title);
+                holder.image01 = convertView.findViewById(R.id.image01);
+                holder.image02 = convertView.findViewById(R.id.image02);
+                holder.image03 = convertView.findViewById(R.id.image03);
+                holder.title = convertView.findViewById(R.id.title);
                 convertView.setTag(holder);
             } else {
                 holder = (Image03_ViewHolder) convertView.getTag();
@@ -176,17 +171,17 @@ public class TabAdapter extends BaseAdapter {
     }
 
     //新增3个内部类
-    class Image01_ViewHolder {
+    static class Image01_ViewHolder {
         TextView title, author_name;
         ImageView image;
     }
 
-    class Image02_ViewHolder {
+    static class Image02_ViewHolder {
         TextView title;
         ImageView image001, image002;
     }
 
-    class Image03_ViewHolder {
+    static class Image03_ViewHolder {
         TextView title;
         ImageView image01, image02, image03;
     }

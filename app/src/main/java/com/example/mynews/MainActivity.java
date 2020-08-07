@@ -68,8 +68,7 @@ public class MainActivity extends BaseActivity {
 
     // 采用静态变量来存储当前登录的账号
     public static String currentUserId;
-    // 记录读者账号，相当于Session来使用
-    private String currentUserNickName, currentSignature, currentImagePath;
+    private String currentImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,8 +236,7 @@ public class MainActivity extends BaseActivity {
             @NonNull
             @Override
             public Object instantiateItem(@NonNull ViewGroup container, int position) {
-                NewsFragment newsFragment = (NewsFragment) super.instantiateItem(container, position);
-                return newsFragment;
+                return (NewsFragment) super.instantiateItem(container, position);
             }
 
             //具体讲解：https://www.cnblogs.com/cheneasternsun/p/6017012.html，但是这样用比较浪费资源
@@ -297,6 +295,8 @@ public class MainActivity extends BaseActivity {
         userNickName = v.findViewById(R.id.text_nickname);
         userSignature = v.findViewById(R.id.text_signature);
 
+        String currentSignature;// 记录读者账号，相当于Session来使用
+        String currentUserNickName;
         switch (requestCode) {
             case 1: // 切换账号登录后来主界面
                 if (resultCode == RESULT_OK) {

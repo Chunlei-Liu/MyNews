@@ -34,7 +34,7 @@ public class FavoriteNewsListAdapter extends ArrayAdapter<NewsCollectBean> {
         return view;
     }
 
-    public class ViewHoder {
+    public static class ViewHoder {
         private TextView newsName;
     }
 }

@@ -24,10 +24,7 @@ import java.util.List;
 public class UserFavoriteActivity extends AppCompatActivity {
     private ListView favoriteNewsList;
     private List<NewsCollectBean> sonNewList = new ArrayList<>();
-    private Toolbar favoriteToolbar;
     private String userIdNumber;
-
-    private FavoriteNewsListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +34,7 @@ public class UserFavoriteActivity extends AppCompatActivity {
         userIdNumber = getIntent().getStringExtra("user_love_id");
         System.out.println("收藏：当前用户的id为" + userIdNumber);
         favoriteNewsList = findViewById(R.id.favorite_newsList);
-        favoriteToolbar = findViewById(R.id.userFavorite_toolbar);
+        Toolbar favoriteToolbar = findViewById(R.id.userFavorite_toolbar);
         favoriteToolbar.setTitle("我的收藏");
         setSupportActionBar(favoriteToolbar);
         initNews();
@@ -52,7 +49,7 @@ public class UserFavoriteActivity extends AppCompatActivity {
     private void initNews() {
         sonNewList = LitePal.where("userIdNumer = ? ", userIdNumber).find(NewsCollectBean.class);
         System.out.println("当前喜欢的列表有：" + sonNewList);
-        adapter = new FavoriteNewsListAdapter(UserFavoriteActivity.this, R.layout.item_favourite_news, sonNewList);
+        FavoriteNewsListAdapter adapter = new FavoriteNewsListAdapter(UserFavoriteActivity.this, R.layout.item_favourite_news, sonNewList);
         favoriteNewsList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -75,10 +72,8 @@ public class UserFavoriteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                UserFavoriteActivity.this.finish();
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            UserFavoriteActivity.this.finish();
         }
         return true;
     }
@@ -86,13 +81,11 @@ public class UserFavoriteActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 4:
-                if (resultCode == RESULT_OK) {
-                    initNews();
-                    System.out.println("奥里给！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！");
-                }
-                break;
+        if (requestCode == 4) {
+            if (resultCode == RESULT_OK) {
+                initNews();
+                System.out.println("奥里给！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！");
+            }
         }
     }
 }

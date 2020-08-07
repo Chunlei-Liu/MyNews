@@ -49,7 +49,7 @@ public class NewsFragment extends Fragment {
     private String currentTabName = "top";
 
     //分页查询参数，每页显示10条新闻数据
-    private int pageNo = 0, pageSize = 10;
+    private int pageNo = 0;
 
     //每一个Fragment页面都有一个浮动按钮，用于快速回到顶部
     private FloatingActionButton fab;
@@ -60,29 +60,24 @@ public class NewsFragment extends Fragment {
         //主线程
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case UPNEWS_INSERT:
-                    //从服务器来获取NewsBean数据
-                    //Log.d("从服务器来获取NewsBean数据", "handleMessage: " + msg.obj);
-                    contentItems = ((NewsBean) msg.obj).getResult().getData();
-                    //构造一个适配器来填充新闻列表
-                    TabAdapter adapter = new TabAdapter(getActivity(), contentItems);
-                    newsListView.setAdapter(adapter);
-                    //当adapter中的数据被更改后必须马上调用notifyDataSetChanged予以更新。
-                    adapter.notifyDataSetChanged();
-                    //从服务器获取的数据缓存到本地数据库，注意去重插入的数据
-                    NewsInfoBean newsInfo;
-                    for (int i = 0, len = contentItems.size(); i < len; ++i) {
-                        newsInfo = new NewsInfoBean(contentItems.get(i));
-                        //测试是否请求的数据有重复
-                        //List<NewsInfoBean> beans = LitePal.where("uniquekey = ?", contentItems.get(i).getUniquekey()).find(NewsInfoBean.class);
-                        //Log.d("请求数据后", "handleMessage: " + beans.size());
-                        //将数据缓存到本地数据库
-                        newsInfo.save();
-                    }
-                    break;
-                default:
-                    break;
+            if (msg.what == UPNEWS_INSERT) {//从服务器来获取NewsBean数据
+                //Log.d("从服务器来获取NewsBean数据", "handleMessage: " + msg.obj);
+                contentItems = ((NewsBean) msg.obj).getResult().getData();
+                //构造一个适配器来填充新闻列表
+                TabAdapter adapter = new TabAdapter(getActivity(), contentItems);
+                newsListView.setAdapter(adapter);
+                //当adapter中的数据被更改后必须马上调用notifyDataSetChanged予以更新。
+                adapter.notifyDataSetChanged();
+                //从服务器获取的数据缓存到本地数据库，注意去重插入的数据
+                NewsInfoBean newsInfo;
+                for (int i = 0, len = contentItems.size(); i < len; ++i) {
+                    newsInfo = new NewsInfoBean(contentItems.get(i));
+                    //测试是否请求的数据有重复
+                    //List<NewsInfoBean> beans = LitePal.where("uniquekey = ?", contentItems.get(i).getUniquekey()).find(NewsInfoBean.class);
+                    //Log.d("请求数据后", "handleMessage: " + beans.size());
+                    //将数据缓存到本地数据库
+                    newsInfo.save();
+                }
             }
         }
     };
@@ -226,6 +221,7 @@ public class NewsFragment extends Fragment {
         ++pageNo;
         List<NewsBean.ResultBean.DataBean> dataBeanList = new ArrayList<>();
         NewsBean.ResultBean.DataBean bean = null;
+        int pageSize = 10;
         int offsetV = (pageNo - 1) * pageSize;
         Log.d("pageNo", "页数为: " + pageNo);
         Log.d("offsetV", "偏移量为: " + offsetV);
@@ -279,9 +275,8 @@ public class NewsFragment extends Fragment {
                     if (responseCode == HttpURLConnection.HTTP_OK) {
                         //获取服务器返回的输入流
                         InputStream inputStream = connection.getInputStream();
-                        String json = streamToString(inputStream, "utf-8");
                         //返回任务的执行结果
-                        return json;
+                        return streamToString(inputStream, "utf-8");
                     } else {
                         //返回的状态码不是200
                         return 404 + data;
