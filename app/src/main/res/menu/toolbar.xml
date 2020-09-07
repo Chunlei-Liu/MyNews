@@ -11,11 +11,5 @@
         android:orderInCategory="110"
         android:title="用户反馈"
         app:showAsAction="collapseActionView" />
-    <item
-        android:id="@+id/userExit"
-        android:icon="@drawable/ic_exit"
-        android:orderInCategory="100"
-        android:title="退出"
-        app:showAsAction="always" />
 
 </menu>

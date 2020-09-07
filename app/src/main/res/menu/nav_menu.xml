@@ -3,25 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_edit"
-            android:checkable="true"
-            android:icon="@drawable/nav_personinfo"
-            android:title="@string/nav_menu_edit" />
-        <item
-            android:id="@+id/nav_favorite"
-            android:checkable="true"
-            android:icon="@drawable/nav_favorite"
-            android:title="@string/nav_menu_fav" />
+        
         <item
             android:id="@+id/nav_clear_cache"
             android:checkable="true"
             android:icon="@drawable/nav_clear_cache"
             android:title="@string/nav_menu_clear" />
-        <item
-            android:id="@+id/nav_switch"
-            android:checkable="true"
-            android:icon="@drawable/nav_switch"
-            android:title="@string/nav_menu_switch" />
+
     </group>
 </menu>

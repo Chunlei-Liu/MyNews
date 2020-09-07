@@ -14,11 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".usermodel.UserFavoriteActivity" />
-        <activity android:name=".usermodel.UserDetailActivity" />
         <activity android:name=".WebActivity" />
-        <activity android:name=".usermodel.RegisterActivity" />
-        <activity android:name=".usermodel.LoginActivity" />
 
         <activity
             android:name=".MainActivity"

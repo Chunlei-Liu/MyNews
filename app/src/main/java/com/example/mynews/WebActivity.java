@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,17 +20,13 @@ import android.widget.Toast;
 
 import com.example.mynews.tools.BaseActivity;
 
-import org.litepal.LitePal;
-
-import java.util.List;
-
 @SuppressLint("SetJavaScriptEnabled")
 public class WebActivity extends BaseActivity {
     private WebView webView;
 
     private Toolbar navToolbar, commentToolBar;
 
-    private String urlData, pageUniquekey, pageTtile;
+    private String urlData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +45,8 @@ public class WebActivity extends BaseActivity {
         super.onStart();
         // 获取html页面的连接
         urlData = getIntent().getStringExtra("pageUrl");
-        pageUniquekey = getIntent().getStringExtra("uniquekey");
-        pageTtile = getIntent().getStringExtra("news_title");
+        String pageUniquekey = getIntent().getStringExtra("uniquekey");
+        String pageTtile = getIntent().getStringExtra("news_title");
 
 //        System.out.println("当前新闻id为：" + pageUniquekey);
 //        System.out.println("当前新闻标题为：" + pageTtile);
@@ -97,15 +92,6 @@ public class WebActivity extends BaseActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                // 页面开始加载时就去查看收藏表中是否有对应的记录，组合键（账号和新闻号）
-                List<NewsCollectBean> beanList = LitePal.where("userIdNumer = ? AND newsId = ?", MainActivity.currentUserId == null ? "" : MainActivity.currentUserId, pageUniquekey).find(NewsCollectBean.class);
-                // 获取收藏按钮
-                MenuItem u = commentToolBar.getMenu().getItem(0);
-                if (beanList.size() > 0) {
-                    u.setIcon(R.drawable.ic_star_border_favourite_yes);
-                } else {
-                    u.setIcon(R.drawable.ic_star_border_favourite_no);
-                }
             }
 
             // 在页面加载结束时调用
@@ -157,41 +143,7 @@ public class WebActivity extends BaseActivity {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(Intent.createChooser(intent, getTitle()));
                         break;
-                    case R.id.news_collect:
-                        //下一步实现点击收藏功能，以及用户查看收藏功能
-                        if (!TextUtils.isEmpty(MainActivity.currentUserId)) {
-                            // 先去查询一下是否有收藏过，然后加载每条新闻的时候查看是否已经被收藏，若被收藏，则将收藏按钮背景色设置为红色，否则为白色
-                            MenuItem u = commentToolBar.getMenu().getItem(0);
-                            List<NewsCollectBean> bean = LitePal.where("userIdNumer = ? AND newsId = ?", MainActivity.currentUserId, pageUniquekey).find(NewsCollectBean.class);
-                            NewsCollectBean currentNews = null;
-                            System.out.println("收藏：" + bean);
-                            String answer = "";
-                            if (bean.size() > 0) {
-                                System.out.println("111111111111111");
-                                int i = LitePal.deleteAll(NewsCollectBean.class, "userIdNumer = ? AND newsId = ?", MainActivity.currentUserId, pageUniquekey);
-                                if (i > 0) {
-                                    answer = "取消收藏！";
-                                    u.setIcon(R.drawable.ic_star_border_favourite_no);
-                                } else answer = "取消失败！";
-//                                System.out.println("取消收藏");
-                            } else {
-                                currentNews = new NewsCollectBean();
-                                currentNews.setUserIdNumer(MainActivity.currentUserId);
-                                currentNews.setNewsTitle(pageTtile);
-                                currentNews.setNewsId(pageUniquekey);
-                                currentNews.setNewsUrl(urlData);
-                                boolean isSave = currentNews.save();
-                                System.out.println("收藏的新闻：" + currentNews);
-                                if (isSave) {
-                                    answer = "收藏成功！";
-                                    u.setIcon(R.drawable.ic_star_border_favourite_yes);
-                                } else answer = "收藏失败！";
-                            }
-                            Toast.makeText(WebActivity.this, answer, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(WebActivity.this, "请先登录后再收藏！", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
+
                 }
                 return true;
             }

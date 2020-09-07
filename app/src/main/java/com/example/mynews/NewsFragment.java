@@ -23,16 +23,16 @@ import com.google.gson.Gson;
 
 import org.litepal.LitePal;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 //每个tab下的碎片Fragment
 public class NewsFragment extends Fragment {
@@ -49,12 +49,11 @@ public class NewsFragment extends Fragment {
     private String currentTabName = "top";
 
     //分页查询参数，每页显示10条新闻数据
-    private int pageNo = 0;
+    private int pageNo = 8;
 
     //每一个Fragment页面都有一个浮动按钮，用于快速回到顶部
     private FloatingActionButton fab;
 
-    //添加此注解的原理：https://blog.csdn.net/androidsj/article/details/79865091
     @SuppressLint("HandlerLeak")
     private Handler newsHandler = new Handler() {
         //主线程
@@ -113,14 +112,14 @@ public class NewsFragment extends Fragment {
         //getActivity()为空的情况(API<23时并不会去调用此方法)，讲解1：https://blog.csdn.net/u012811342/article/details/80493352
         //讲解2：https://blog.csdn.net/qq_31010739/article/details/83348085
         //onAttach(getActivity());//该方法已弃用，查看源码即可
-        onAttach(getContext());
+        onAttach(Objects.requireNonNull(getContext()));
         Log.d("上下文：", "Context: " + getContext());
         Log.d("NewsFragment>>>", "Activity: " + getActivity());
         Bundle bundle = getArguments();
         //获取键对应的值，参数2表示默认填充的值，其用法和Intent差不多，但又有区别
         //data = bundle.getString("name", "top");
         //tv.setText(data);
-        final String category = bundle.getString("name", "top");
+        final String category = Objects.requireNonNull(bundle).getString("name", "top");
         currentTabName = category;
         Log.d("点击tab小标题为：", "onActivityCreated: " + category);
         //实现置顶功能
@@ -196,31 +195,42 @@ public class NewsFragment extends Fragment {
     private void loaderRefreshData(final String category) {
         //top，shehui，guonei，guoji，yule，tiyu，junshi，keji，caijing，shishang
         String categoryName = "头条";
-        if (category.equals("top")) {
-            categoryName = "头条";
-        } else if (category.equals("shehui")) {
-            categoryName = "社会";
-        } else if (category.equals("guonei")) {
-            categoryName = "国内";
-        } else if (category.equals("guoji")) {
-            categoryName = "国际";
-        } else if (category.equals("yule")) {
-            categoryName = "娱乐";
-        } else if (category.equals("tiyu")) {
-            categoryName = "体育";
-        } else if (category.equals("junshi")) {
-            categoryName = "军事";
-        } else if (category.equals("keji")) {
-            categoryName = "科技";
-        } else if (category.equals("caijing")) {
-            categoryName = "财经";
-        } else if (category.equals("shishang")) {
-            categoryName = "时尚";
+        switch (category) {
+            case "top":
+                categoryName = "头条";
+                break;
+            case "shehui":
+                categoryName = "社会";
+                break;
+            case "guonei":
+                categoryName = "国内";
+                break;
+            case "guoji":
+                categoryName = "国际";
+                break;
+            case "yule":
+                categoryName = "娱乐";
+                break;
+            case "tiyu":
+                categoryName = "体育";
+                break;
+            case "junshi":
+                categoryName = "军事";
+                break;
+            case "keji":
+                categoryName = "科技";
+                break;
+            case "caijing":
+                categoryName = "财经";
+                break;
+            case "shishang":
+                categoryName = "时尚";
+                break;
         }
         //页数加1
         ++pageNo;
         List<NewsBean.ResultBean.DataBean> dataBeanList = new ArrayList<>();
-        NewsBean.ResultBean.DataBean bean = null;
+        NewsBean.ResultBean.DataBean bean;
         int pageSize = 10;
         int offsetV = (pageNo - 1) * pageSize;
         Log.d("pageNo", "页数为: " + pageNo);
@@ -258,33 +268,24 @@ public class NewsFragment extends Fragment {
             @Override //储备key：547ee75ef186fc55a8f015e38dcfdb9a
             protected String doInBackground(Void... params) { // 自己的key：af2d37d2ed31f7a074f1d49b5460a0b5，可以替换下面请求中的key
                 String path = "https://v.juhe.cn/toutiao/index?type=" + data + "&key=23e3cb7604892e2ccf6b1bc9e4fbaae6";
-                URL url = null;
-
+                URL url;
+                Log.i("MainActivity", ">>>>>>>>>>>>");
                 try {
                     url = new URL(path);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    //设置请求方式
-                    connection.setRequestMethod("GET");
-                    //设置读取超时的毫秒数
-                    connection.setReadTimeout(5000);
-                    //设置连接超时时间
-                    connection.setConnectTimeout(5000);
-                    //获取状态码
-                    int responseCode = connection.getResponseCode();
-                    // 200
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        //获取服务器返回的输入流
-                        InputStream inputStream = connection.getInputStream();
-                        //返回任务的执行结果
-                        return streamToString(inputStream, "utf-8");
-                    } else {
-                        //返回的状态码不是200
-                        return 404 + data;
+                    OkHttpClient okHttpClient = new OkHttpClient();
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .get()
+                            .build();
+                    Call call = okHttpClient.newCall(request);
+                    //通过execute()方法获得请求响应的Response对象
+                    Response response = call.execute();
+                    if (response.isSuccessful()) {
+                        String res = response.body().string();
+                        Log.i("MainActivity", ">>>" + res);
+                        return res;
                     }
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (ProtocolException e) {
-                    e.printStackTrace();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -297,7 +298,7 @@ public class NewsFragment extends Fragment {
                     @Override
                     public void run() {
                         //查看状态码是否为200，若不是（开子线程），然后从本地加载相应的数据
-                        NewsBean newsBean = null;
+                        NewsBean newsBean;
                         //不包括endIndex
                         Log.d("后台处理的数据为：", "run: " + result);
                         if (!result.substring(0, 3).equals("404")) {
@@ -334,25 +335,4 @@ public class NewsFragment extends Fragment {
         task.execute();
     }
 
-    //输入流转化成字符串
-    private String streamToString(InputStream inputStream, String charset) {
-        try {
-            //创建一个使用命名字符集的InputStreamReader。 InputStreamReader(InputStream in, String charsetName)
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, charset);
-            //构造一个字符输入流对象
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String s = null;
-            StringBuilder builder = new StringBuilder();
-            while ((s = bufferedReader.readLine()) != null) {
-                builder.append(s);
-            }
-            //关闭流
-            bufferedReader.close();
-            inputStreamReader.close();
-            return builder.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }
