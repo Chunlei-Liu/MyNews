@@ -48,14 +48,11 @@ public class WebActivity extends BaseActivity {
         String pageUniquekey = getIntent().getStringExtra("uniquekey");
         String pageTtile = getIntent().getStringExtra("news_title");
 
-//        System.out.println("当前新闻id为：" + pageUniquekey);
-//        System.out.println("当前新闻标题为：" + pageTtile);
         Log.i("WebActivity", "Url>>>:" + urlData);
 
         // 通过WebView中的getSettings方法获得一个WebSettings对象
         WebSettings settings = webView.getSettings();
 
-        // 详细讲解：https://www.jianshu.com/p/0d7d429bd216
         // 开启javascript：h5页要一般都有js,设置为true才允许h5页面执行js，但开启js非常耗内存，经常会导致oom，
         // 为了解决这个问题，可以在onStart方法中开启，在onStop中关闭。
         settings.setJavaScriptEnabled(true);
@@ -68,7 +65,6 @@ public class WebActivity extends BaseActivity {
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
 
         // 设置webview推荐使用的窗口，使html界面自适应屏幕
-        // 原因讲解：https://blog.csdn.net/SCHOLAR_II/article/details/80614486
         settings.setUseWideViewPort(true);
         // 设置WebView底层的布局算法，参考LayoutAlgorithm#NARROW_COLUMNS，将会重新生成WebView布局
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
@@ -168,29 +164,6 @@ public class WebActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.toolbar_webview, menu);
-
-        // SearchManager提供全局搜索服务
-        // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        // 通过MenuItem得到SearchView
-        // SearchView searchView = (SearchView) menu.findItem(R.id.news_search).getActionView();
-
-        // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        // 搜索框文字变化监听
-        /*searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // 在文字改变的时候回调，query是改变之后的文字
-                Toast.makeText(WebActivity.this, query, Toast.LENGTH_SHORT).show();
-                return false;
-            }
-
-            //文字提交的时候回调
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                Toast.makeText(WebActivity.this, newText, Toast.LENGTH_LONG).show();
-                return false;
-            }
-        });*/
         return true;
     }
 

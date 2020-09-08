@@ -3,15 +3,15 @@ package com.example.mynews;
 import org.litepal.crud.LitePalSupport;
 
 public class NewsInfoBean extends LitePalSupport {
-    private String uniquekey;
-    private String title;
-    private String date;
-    private String category;
-    private String author_name;
-    private String url;
-    private String thumbnail_pic_s;
-    private String thumbnail_pic_s02;
-    private String thumbnail_pic_s03;
+    private final String uniquekey;
+    private final String title;
+    private final String date;
+    private final String category;
+    private final String author_name;
+    private final String url;
+    private final String thumbnail_pic_s;
+    private final String thumbnail_pic_s02;
+    private final String thumbnail_pic_s03;
 
     public NewsInfoBean(NewsBean.ResultBean.DataBean dataBean) {
         this.uniquekey = dataBean.getUniquekey();

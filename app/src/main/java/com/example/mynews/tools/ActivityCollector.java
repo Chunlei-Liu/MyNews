@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActivityCollector {
-    public static List<Activity> activities = new ArrayList<>();
+    public static final List<Activity> activities = new ArrayList<>();
 
     public static void addActivity(Activity activity) {
         activities.add(activity);

@@ -14,14 +14,14 @@ import java.util.List;
 
 public class TabAdapter extends BaseAdapter {
 
-    private List<NewsBean.ResultBean.DataBean> list;
+    private final List<NewsBean.ResultBean.DataBean> list;
 
-    private Context context;
+    private final Context context;
 
     //设置正常加载图片的个数
-    private int IMAGE_01 = 0;
+    private final int IMAGE_01 = 0;
 
-    private int IMAGE_02 = 1;
+    private final int IMAGE_02 = 1;
 
     public TabAdapter(Context context, List<NewsBean.ResultBean.DataBean> list) {
         this.context = context;
@@ -65,7 +65,7 @@ public class TabAdapter extends BaseAdapter {
         return IMAGE_01;
     }
 
-    //提升ListView的运行效率，参数convertView用于将之前加载好的布局进行缓存，以便以后可以重用：https://blog.csdn.net/xiao_ziqiang/article/details/50812471
+    //提升ListView的运行效率，参数convertView用于将之前加载好的布局进行缓存，以便以后可以重用
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (getItemViewType(position) == IMAGE_01) {

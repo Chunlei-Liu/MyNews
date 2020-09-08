@@ -8,8 +8,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 
-// 本应用数据清除管理器
-@SuppressWarnings("JavaDoc")
+// 清除缓存
 public class DataCleanManager {
 
     private static final String TAG = "MainActivity";
@@ -20,7 +19,6 @@ public class DataCleanManager {
      * @param context
      */
     public static void cleanInternalCache(Context context) {
-//        System.out.println("进来了:" + context.getCacheDir());
         Log.i(TAG, ">>>cleanInternalCache: " + context.getCacheDir());
         deleteFilesByDirectory(context.getCacheDir());
     }
@@ -32,18 +30,15 @@ public class DataCleanManager {
      * @param file
      */
     private static void deleteFilesByDirectory(File file) {
-//        System.out.println("进来删除了？6666");
+
         if (file.isDirectory()) {
             File[] zFiles = file.listFiles();
             for (File file2 : Objects.requireNonNull(zFiles)) {
                 deleteFilesByDirectory(file2);
             }
-//            System.out.println("要删除的目录名为：" + file.getName());
-//            System.out.println("删除成功？" + file.delete());
             file.delete();
         } else {
-//            System.out.println("要删除的文件名为：" + file.getName());
-//            System.out.println("删除成功？" + file.delete());
+
             file.delete();
         }
 
@@ -97,14 +92,11 @@ public class DataCleanManager {
         }
 
         double teraBytes = gigaByte / 1024;
-        if (teraBytes < 1) {
-            BigDecimal result3 = new BigDecimal(Double.toString(gigaByte));
-            return result3.setScale(2, BigDecimal.ROUND_HALF_UP)
-                    .toPlainString() + "GB";
-        }
-        BigDecimal result4 = new BigDecimal(teraBytes);
-        return result4.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString()
-                + "TB";
+
+        BigDecimal result3 = new BigDecimal(Double.toString(gigaByte));
+        return result3.setScale(2, BigDecimal.ROUND_HALF_UP)
+                .toPlainString() + "GB";
+
     }
 
     public static String getCacheSize(File file) throws Exception {

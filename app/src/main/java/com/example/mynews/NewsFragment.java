@@ -34,7 +34,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-//每个tab下的碎片Fragment
+// 每个tab下的Fragment
 public class NewsFragment extends Fragment {
     //新闻列表
     private ListView newsListView;
@@ -55,12 +55,11 @@ public class NewsFragment extends Fragment {
     private FloatingActionButton fab;
 
     @SuppressLint("HandlerLeak")
-    private Handler newsHandler = new Handler() {
-        //主线程
+    private final Handler newsHandler = new Handler() {
+        // 主线程
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == UPNEWS_INSERT) {//从服务器来获取NewsBean数据
-                //Log.d("从服务器来获取NewsBean数据", "handleMessage: " + msg.obj);
+            if (msg.what == UPNEWS_INSERT) {
                 contentItems = ((NewsBean) msg.obj).getResult().getData();
                 //构造一个适配器来填充新闻列表
                 TabAdapter adapter = new TabAdapter(getActivity(), contentItems);
@@ -72,8 +71,6 @@ public class NewsFragment extends Fragment {
                 for (int i = 0, len = contentItems.size(); i < len; ++i) {
                     newsInfo = new NewsInfoBean(contentItems.get(i));
                     //测试是否请求的数据有重复
-                    //List<NewsInfoBean> beans = LitePal.where("uniquekey = ?", contentItems.get(i).getUniquekey()).find(NewsInfoBean.class);
-                    //Log.d("请求数据后", "handleMessage: " + beans.size());
                     //将数据缓存到本地数据库
                     newsInfo.save();
                 }
@@ -81,7 +78,7 @@ public class NewsFragment extends Fragment {
         }
     };
 
-    //创建Fragment被添加到活动中时回调，且只会被调用一次
+    // 创建Fragment被添加到活动中时回调，且只会被调用一次
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,24 +98,17 @@ public class NewsFragment extends Fragment {
         return view;
     }
 
-    //当NewsFragment所在的Activity启动完成后调用，声明周期紧接在onCreateView()之后
-    //使用此注解的讲解：https://blog.csdn.net/androidsj/article/details/79865091
-    //@SuppressLint("HandlerLeak")
+    // 当NewsFragment所在的Activity启动完成后调用，声明周期紧接在onCreateView()之后
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //getActivity():获得Fragment依附的Activity对象。（具体讲解：https://blog.csdn.net/y874961524/article/details/53773095）
-        //getActivity()和onAttach()结合使用的生命周期相关讲解：https://blog.csdn.net/u013446591/article/details/72730767
-        //getActivity()为空的情况(API<23时并不会去调用此方法)，讲解1：https://blog.csdn.net/u012811342/article/details/80493352
-        //讲解2：https://blog.csdn.net/qq_31010739/article/details/83348085
-        //onAttach(getActivity());//该方法已弃用，查看源码即可
+
         onAttach(Objects.requireNonNull(getContext()));
         Log.d("上下文：", "Context: " + getContext());
         Log.d("NewsFragment>>>", "Activity: " + getActivity());
         Bundle bundle = getArguments();
         //获取键对应的值，参数2表示默认填充的值，其用法和Intent差不多，但又有区别
         //data = bundle.getString("name", "top");
-        //tv.setText(data);
         final String category = Objects.requireNonNull(bundle).getString("name", "top");
         currentTabName = category;
         Log.d("点击tab小标题为：", "onActivityCreated: " + category);
@@ -126,7 +116,7 @@ public class NewsFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //滚动到第一个可见的item位置，下标为0，具体讲解：https://www.jianshu.com/p/a5cd3cff2f1b
+                //滚动到第一个可见的item位置，下标为0
                 newsListView.smoothScrollToPosition(0);
             }
         });
@@ -158,7 +148,6 @@ public class NewsFragment extends Fragment {
                 intent.putExtra("pageUrl", url);
                 intent.putExtra("uniquekey", uniquekey);
                 intent.putExtra("news_title", newsTitle);
-//                System.out.println("当前账号为：" + MainActivity.currentUserId);
                 startActivity(intent);
             }
         });
@@ -193,7 +182,6 @@ public class NewsFragment extends Fragment {
 
     //加载数据，实现从本地数据库中读取数据刷新到newsListView的适配器中
     private void loaderRefreshData(final String category) {
-        //top，shehui，guonei，guoji，yule，tiyu，junshi，keji，caijing，shishang
         String categoryName = "头条";
         switch (category) {
             case "top":
@@ -269,7 +257,7 @@ public class NewsFragment extends Fragment {
             protected String doInBackground(Void... params) { // 自己的key：af2d37d2ed31f7a074f1d49b5460a0b5，可以替换下面请求中的key
                 String path = "https://v.juhe.cn/toutiao/index?type=" + data + "&key=23e3cb7604892e2ccf6b1bc9e4fbaae6";
                 URL url;
-                Log.i("MainActivity", ">>>>>>>>>>>>");
+
                 try {
                     url = new URL(path);
                     OkHttpClient okHttpClient = new OkHttpClient();
@@ -303,7 +291,6 @@ public class NewsFragment extends Fragment {
                         Log.d("后台处理的数据为：", "run: " + result);
                         if (!result.substring(0, 3).equals("404")) {
                             newsBean = new Gson().fromJson(result, NewsBean.class);
-//                            System.out.println(newsBean.getError_code());
                             if ("0".equals("" + newsBean.getError_code())) {
                                 //obtainmessage()方法是从消息池中拿来一个msg，不需要另开辟空间new，new需要重新申请，效率低，obtianmessage可以循环利用；
                                 Message msg = newsHandler.obtainMessage();
@@ -334,5 +321,4 @@ public class NewsFragment extends Fragment {
         //启动异步加载任务
         task.execute();
     }
-
 }

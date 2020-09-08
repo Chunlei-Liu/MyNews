@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity {
         list = new ArrayList<>();
     }
 
-    //在活动由不可见变为可见的时候调用
+    // 在活动由不可见变为可见的时候调用
     @Override
     protected void onStart() {
         super.onStart();
@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity {
         list.add("财经");
         list.add("时尚");
 
-        //表示ViewPager（默认）预加载一页
+        // 表示ViewPager（默认）预加载一页
         viewPager.setOffscreenPageLimit(1);
 
         viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager(), 1) {
@@ -172,7 +172,7 @@ public class MainActivity extends BaseActivity {
                 return newsFragment;
             }
 
-            //创建指定位置的页面视图
+            // 创建指定位置的页面视图
             @NonNull
             @Override
             public Object instantiateItem(@NonNull ViewGroup container, int position) {
@@ -226,7 +226,6 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
                         // dialog 此弹窗实例共享父实例
-//                        System.out.println("点击了啥内容：" + which);
                         // 没起作用
                         DataCleanManager.cleanInternalCache(MainActivity.this);
                         Toast.makeText(MainActivity.this, "成功清除缓存。", Toast.LENGTH_SHORT).show();
@@ -263,7 +262,6 @@ public class MainActivity extends BaseActivity {
                         .input(null, null, new MaterialDialog.InputCallback() {
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
-//                                System.out.println("反馈的内容为：" + input);
                                 Toast.makeText(MainActivity.this, "反馈成功！反馈内容为：" + input, Toast.LENGTH_SHORT).show();
                             }
                         })
