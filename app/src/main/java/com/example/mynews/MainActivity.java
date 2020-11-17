@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.mynews.tools.BaseActivity;
 import com.example.mynews.tools.DataCleanManager;
@@ -86,22 +85,14 @@ public class MainActivity extends BaseActivity {
         }
         //设置默认选中第一个
         //设置菜单项的监听事件
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                //逻辑页面处理
-                mDrawerLayout.closeDrawers();
-                switch (menuItem.getItemId()) {
-
-                    case R.id.nav_clear_cache:
-                        // 清除缓存
-                        // Toast.makeText(MainActivity.this,"你点击了清除缓存，下步实现把",Toast.LENGTH_SHORT).show();
-                        clearCacheData();
-                        break;
-
-                }
-                return true;
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            //逻辑页面处理
+            mDrawerLayout.closeDrawers();
+            if (menuItem.getItemId() == R.id.nav_clear_cache) {// 清除缓存
+                // Toast.makeText(MainActivity.this,"你点击了清除缓存，下步实现把",Toast.LENGTH_SHORT).show();
+                clearCacheData();
             }
+            return true;
         });
         // 新闻种类tab标题
         list.add("头条");
@@ -222,14 +213,11 @@ public class MainActivity extends BaseActivity {
                 .title("提示")
                 .content("当前缓存大小一共为" + cacheSize + "。确定要删除所有缓存？离线内容及其图片均会被清除。")
                 .positiveText("确认")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog dialog, DialogAction which) {
-                        // dialog 此弹窗实例共享父实例
-                        // 没起作用
-                        DataCleanManager.cleanInternalCache(MainActivity.this);
-                        Toast.makeText(MainActivity.this, "成功清除缓存。", Toast.LENGTH_SHORT).show();
-                    }
+                .onPositive((dialog, which) -> {
+                    // dialog 此弹窗实例共享父实例
+                    // 没起作用
+                    DataCleanManager.cleanInternalCache(MainActivity.this);
+                    Toast.makeText(MainActivity.this, "成功清除缓存。", Toast.LENGTH_SHORT).show();
                 })
                 .negativeText("取消")
                 .show();
@@ -259,12 +247,7 @@ public class MainActivity extends BaseActivity {
                         .title("用户反馈")
                         .inputRangeRes(1, 50, R.color.colorBlack)
                         .inputType(InputType.TYPE_CLASS_TEXT)
-                        .input(null, null, new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                Toast.makeText(MainActivity.this, "反馈成功！反馈内容为：" + input, Toast.LENGTH_SHORT).show();
-                            }
-                        })
+                        .input(null, null, (dialog, input) -> Toast.makeText(MainActivity.this, "反馈成功！反馈内容为：" + input, Toast.LENGTH_SHORT).show())
                         .positiveText("确定")
                         .negativeText("取消")
                         .show();

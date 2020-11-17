@@ -1,5 +1,7 @@
 package com.example.mynews;
 
+import android.annotation.NonNull;
+
 import org.litepal.crud.LitePalSupport;
 
 public class NewsInfoBean extends LitePalSupport {
@@ -61,6 +63,7 @@ public class NewsInfoBean extends LitePalSupport {
         return thumbnail_pic_s03;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "NewsInfoBean{" +

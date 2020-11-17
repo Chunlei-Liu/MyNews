@@ -3,8 +3,5 @@
     <string name="item_lay01">Title</string>
     <string name="item_lay01_author">Author</string>
     <string name="item_lay_img_desc">img</string>
-    <string name="nav_menu_edit">编辑资料</string>
-    <string name="nav_menu_fav">个人收藏</string>
     <string name="nav_menu_clear">清除缓存</string>
-    <string name="nav_menu_switch">切换账号</string>
 </resources>

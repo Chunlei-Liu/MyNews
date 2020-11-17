@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <!--数据库名-->
-    <dbname value="newsApp"></dbname>
+    <dbname value="newsApp" />
 
     <!--数据库版本号-->
-    <version value="1"></version>
+    <version value="1" />
 
     <list>
-        <mapping class="com.example.mynews.NewsInfoBean"></mapping>
+        <mapping class="com.example.mynews.NewsInfoBean" />
     </list>
 </litepal>

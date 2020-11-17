@@ -126,23 +126,16 @@ public class WebActivity extends BaseActivity {
         });
 
 
-        commentToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.news_share:
-                        // 这里有bug，点击之后没反应
-                        Intent intent = new Intent(Intent.ACTION_SEND);
-                        intent.putExtra(Intent.EXTRA_SUBJECT, urlData);
-                        // 分享的文本类型
-                        intent.setType("text/plain");
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(Intent.createChooser(intent, getTitle()));
-                        break;
-
-                }
-                return true;
+        commentToolBar.setOnMenuItemClickListener(menuItem -> {
+            if (menuItem.getItemId() == R.id.news_share) {// 这里有bug，点击之后没反应
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_SUBJECT, urlData);
+                // 分享的文本类型
+                intent.setType("text/plain");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(Intent.createChooser(intent, getTitle()));
             }
+            return true;
         });
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

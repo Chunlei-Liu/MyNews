@@ -12,8 +12,4 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog" tools:targetApi="lollipop">
-        <item name="android:colorAccent">@color/colorPrimary</item>
-    </style>
-
 </resources>
